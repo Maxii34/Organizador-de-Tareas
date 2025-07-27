@@ -17,11 +17,14 @@ function main() {
   }
 
   // Función para obtener clase según estado
-  function getClassPorEstado(estado) {
+  function classePorEstado(estado) {
     switch(estado) {
-      case 'Creada': return 'bg-secondary';
-      case 'En proceso': return 'bg-warning text-dark';
-      case 'Terminada': return 'bg-success';
+      case 'Creada': 
+      return 'bg-secondary';
+      case 'En proceso': 
+      return 'bg-warning text-dark';
+      case 'Terminada': 
+      return 'bg-success';
       default: return 'bg-secondary';
     }
   }
@@ -31,14 +34,19 @@ function main() {
     const estados = ['Creada', 'En proceso', 'Terminada'];
     const indexActual = estados.indexOf(estadoActual);
     const siguienteIndex = (indexActual + 1) % estados.length;
+    // Si el estado es "Terminada", no cambia más
+    if (estadoActual === 'Terminada') {
+      return estadoActual; // No cambia si ya está en "Terminada"
+    }
     return estados[siguienteIndex];
   }
 
+  // Manejo del evento de clic en el botón Añadir
   btnAñadir.addEventListener("click", () => {
     const textoTarea = inputTarea.value.trim();
     if (textoTarea) {
       // Oculta el mensaje de vacío si hay tareas
-      if (mensajeVacio) mensajeVacio.style.display = "none";
+      if (mensajeVacio) mensajeVacio.style.display = "none";  
 
       const fechaActual = new Date();
       
@@ -64,7 +72,7 @@ function main() {
 
       // Crear badge de estado
       const spanEstado = document.createElement("span");
-      spanEstado.className = `badge ${getClassPorEstado('Creada')}`;
+      spanEstado.className = `badge ${classePorEstado('Creada')}`;
       spanEstado.textContent = 'Creada';
 
       divEstadoContainer.appendChild(spanEstado);
@@ -155,7 +163,7 @@ function main() {
       const nuevoEstado = cambiarEstado(estadoActual);
 
       // Actualizar visualmente el estado
-      badge.className = `badge ${getClassPorEstado(nuevoEstado)}`;
+      badge.className = `badge ${classePorEstado(nuevoEstado)}`;
       badge.textContent = nuevoEstado;
 
       // Actualizar fecha de modificación
