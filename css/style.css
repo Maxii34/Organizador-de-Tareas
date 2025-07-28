@@ -33,3 +33,10 @@ footer {
 .icon-btn {
   color: #000;
 }
+
+.divBotones {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

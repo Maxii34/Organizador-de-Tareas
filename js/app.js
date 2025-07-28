@@ -15,9 +15,14 @@ function main() {
   //funcion para eliminar tareas guardadas en localStorage
   function eliminarTareasEnStorage() {
     localStorage.removeItem("tareas");
-    tareas = [];
+    tareas.length = 0; // Vacía el array sin reasignar
     listaTareas.innerHTML = "";
     if (mensajeVacio) mensajeVacio.style.display = "";
+  }
+
+  const btnEliminarTarea = document.getElementById("btnEliminar");
+  if (btnEliminarTarea) {
+    btnEliminarTarea.addEventListener("click", eliminarTareasEnStorage);
   }
 
   // Devuelve la fecha formateada al estilo español
@@ -61,11 +66,11 @@ function main() {
     const fechaActual = new Date();
     const li = document.createElement("li");
     li.className =
-      "list-group-item shadow-sm mb-2 border border-secondary rounded";
+      "list-group-item shadow-sm my-2 p-0 border border-secondary rounded";
 
     // Contenedor principal
     const divPrincipal = document.createElement("div");
-    divPrincipal.className = "d-flex flex-column";
+    divPrincipal.className = " d-flex flex-column p-2";
 
     // Parte superior con texto y estado
     const divSuperior = document.createElement("div");
@@ -73,11 +78,10 @@ function main() {
       "d-flex justify-content-between align-items-start mb-2";
 
     const divTexto = document.createElement("div");
-    divTexto.className = "fw-bold flex-grow-1 texto-tarea";
+    divTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
     divTexto.textContent = tarea.texto;
 
     const divEstadoContainer = document.createElement("div");
-
     const spanEstado = document.createElement("span");
     spanEstado.className = `badge ${classePorEstado(tarea.estado)}`;
     spanEstado.textContent = tarea.estado;
@@ -86,98 +90,94 @@ function main() {
     divSuperior.appendChild(divTexto);
     divSuperior.appendChild(divEstadoContainer);
 
-    // Parte inferior con fechas y botones
+    // Parte inferior con fechas 
     const divInferior = document.createElement("div");
-    divInferior.className = "d-flex justify-content-between align-items-end";
+    divInferior.className = "mb-2";
 
     const divFechas = document.createElement("div");
-    divFechas.className = "small text-muted fechas-container";
+    divFechas.className = "small text-muted";
 
     const divFechaCreacion = document.createElement("div");
-    divFechaCreacion.className = "fecha-creacion me-2 text-nowrap";
+    divFechaCreacion.className = "fecha-creacion text-nowrap";
     divFechaCreacion.textContent = `Creada: ${formatearFecha(
       tarea.fechaCreacion
     )}`;
 
     const divFechaMod = document.createElement("div");
-    divFechaMod.className = "fecha-modificacion me-2 text-nowrap";
+    divFechaMod.className = "fecha-modificacion text-nowrap";
     divFechaMod.textContent = `Modificada: ${formatearFecha(
       tarea.fechaModificacion
     )}`;
 
     divFechas.appendChild(divFechaCreacion);
     divFechas.appendChild(divFechaMod);
+    divInferior.appendChild(divFechas);
 
-    const divBotones = document.createElement("div");
-    divBotones.className = "d-flex botones-container";
+    // Contenedor para los botones (Estado + Acciones)
+    const divBotonesGeneral = document.createElement("div");
+    divBotonesGeneral.className = "d-flex justify-content-center flex-wrap gap-2";
 
     // Botón para cambiar estado
     const btnCambiarEstado = document.createElement("button");
-    btnCambiarEstado.className = "btn btn-success btn-sm me-1";
+    btnCambiarEstado.className = "btn btn-success btn-sm";
     btnCambiarEstado.textContent = "Estado";
     if (tarea.estado === "Terminada") {
       btnCambiarEstado.style.display = "none";
     }
-
     btnCambiarEstado.addEventListener("click", () => {
-      // Cambiar el estado
       const nuevoEstado = cambiarEstado(tarea.estado);
       tarea.estado = nuevoEstado;
       tarea.fechaModificacion = new Date().toISOString();
-      // Guardar los cambios en el localStorage
       guardarTareasEnStorage();
     });
 
-    // Contenedor y botones de acción (editar, leer, borrar)
+    // Contenedor de botones Editar / Leer / Borrar
     const divAcciones = document.createElement("div");
-    divAcciones.className = "d-flex";
+    divAcciones.className = "d-flex flex-wrap gap-2";
 
     const btnEditar = document.createElement("button");
-    btnEditar.className = "btn btn-primary btn-sm me-1";
+    btnEditar.className = "btn btn-primary btn-sm";
     btnEditar.textContent = "Editar";
 
     const btnLeer = document.createElement("button");
-    btnLeer.className = "btn btn-info btn-sm me-1";
+    btnLeer.className = "btn btn-info btn-sm";
     btnLeer.textContent = "Leer";
 
     const btnBorrar = document.createElement("button");
     btnBorrar.className = "btn btn-danger btn-sm";
     btnBorrar.textContent = "Borrar";
 
-    // Evento para eliminar tarea de localStorage
     btnBorrar.addEventListener("click", () => {
-      // 1. Buscar índice de la tarea
       const indice = tareas.findIndex(
         (t) =>
           t.texto === tarea.texto && t.fechaCreacion === tarea.fechaCreacion
       );
 
-      // 2. Eliminarla si se encontró
       if (indice !== -1) {
-        tareas.splice(indice, 1); // Eliminar del array
-        guardarTareasEnStorage(); // Actualizar localStorage
+        tareas.splice(indice, 1);
+        guardarTareasEnStorage();
       }
 
-      // 3. Eliminar el elemento visual del DOM
       li.remove();
 
-      // 4. Mostrar mensaje de vacío si no hay tareas
       if (tareas.length === 0 && mensajeVacio) {
         mensajeVacio.style.display = "block";
       }
     });
 
+    // Armar botones
     divAcciones.appendChild(btnEditar);
     divAcciones.appendChild(btnLeer);
     divAcciones.appendChild(btnBorrar);
 
-    divBotones.appendChild(btnCambiarEstado);
-    divBotones.appendChild(divAcciones);
+    divBotonesGeneral.appendChild(btnCambiarEstado);
+    divBotonesGeneral.appendChild(divAcciones);
 
-    divInferior.appendChild(divFechas);
-    divInferior.appendChild(divBotones);
-    divPrincipal.appendChild(divSuperior);
-    divPrincipal.appendChild(divInferior);
+    // Ensamblar toda la tarea
+    divPrincipal.appendChild(divSuperior); // Texto + Estado
+    divPrincipal.appendChild(divInferior); // Fechas
+    divPrincipal.appendChild(divBotonesGeneral); // Botones debajo
+
     li.appendChild(divPrincipal);
     listaTareas.appendChild(li);
   }
@@ -232,20 +232,20 @@ function main() {
       const inputEditar = document.createElement("input");
       inputEditar.type = "text";
       inputEditar.className = "form-control form-control-sm";
-      inputEditar.style.width = "auto";
+      inputEditar.style.width = "100%";
       inputEditar.value = textoActual;
 
       const btnGuardar = document.createElement("button");
-      btnGuardar.className = "btn btn-success btn-sm ms-2";
-      btnGuardar.textContent = "Guardar";
+      btnGuardar.className = "btn btn-success btn-sm mx-1";
+      btnGuardar.textContent = "✔";
 
       const btnCancelar = document.createElement("button");
-      btnCancelar.className = "btn btn-secondary btn-sm ms-2";
-      btnCancelar.textContent = "Cancelar";
+      btnCancelar.className = "btn btn-secondary btn-sm mx-1";
+      btnCancelar.textContent = "❌";
 
       const divEdicion = document.createElement("div");
       divEdicion.className = "d-flex align-items-center";
-      
+
       divEdicion.appendChild(inputEditar);
       divEdicion.appendChild(btnGuardar);
       divEdicion.appendChild(btnCancelar);
