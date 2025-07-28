@@ -30,7 +30,7 @@ Este es un proyecto web desarrollado con JavaScript que permite gestionar tareas
 ---
 
 ## 🚀 Demo.
-Proba una demo del proyecto [aqui]()
+- Proba la demo del proyecto [aqui.](https://gestordetareasmax.netlify.app/)
 
 ---
 
