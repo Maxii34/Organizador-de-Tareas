@@ -1,6 +1,6 @@
 # Gestor de Tareas Personal 📝
 
-Este es un proyecto web desarrollado con JavaScript que permite gestionar tareas de forma eficiente y organizada. Podés crear, editar, leer, borrar y cambiar el estado de cada tarea.
+Este es un proyecto web desarrollado con JavaScript que permite gestionar tareas de forma eficiente y organizada. `Podés crear, editar, leer, borrar y cambiar el estado de cada tarea.`
 
 ---
 
@@ -43,6 +43,7 @@ Construir una aplicación práctica que funcione como un **organizador de tareas
 ## 📂 Cómo ejecutar el proyecto
 
 - Clonar el repositorio usando el comando `git clone` 
+- `https://github.com/Maxii34/Organizador-de-Tareas`
 - Abrir el `index.html` de la carpeta creada
 
 ---
@@ -54,4 +55,4 @@ Este proyecto sigue creciendo con mejoras visuales, organización del código y 
 ---
 ## Autor
 
-- Creado con dedicación por `Maxiximiliano Ordoñez 💻`
+- Creado por `Maximiliano Ordoñez 💻`
