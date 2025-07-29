@@ -40,3 +40,10 @@ footer {
   flex-wrap: wrap;
   gap: 8px;
 }
+
+.texto-opaco {
+  opacity: 0.6;
+  font-size: 12px;
+  color: #000; /* O #333 si querés un gris más suave */
+  
+}
