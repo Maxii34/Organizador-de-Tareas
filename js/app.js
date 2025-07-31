@@ -141,7 +141,7 @@ function main() {
 
     const btnLeer = document.createElement("button");
     btnLeer.className = "btn btn-info btn-sm";
-    btnLeer.textContent = "Leer";
+    btnLeer.textContent = "ver";
 
     const btnBorrar = document.createElement("button");
     btnBorrar.className = "btn btn-danger btn-sm";

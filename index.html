@@ -24,10 +24,10 @@
   <body>
     <header>
       <nav
-        class="navbar navbar-expand-lg bg-body-tertiary shadow border-bottom"
+        class="navbar navbar-expand-lg css shadow border-bottom"
       >
         <div class="container">
-          <a class="navbar-brand" href="/index.html">Organizador De Tareas</a>
+          <a class="navbar-brand text-light" href="/index.html">Organizador De Tareas</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -43,7 +43,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a
-                  class="nav-link active"
+                  class="nav-link active text-light"
                   aria-current="page"
                   href="/index.html"
                   >Inicio</a
@@ -51,7 +51,7 @@
               </li>
               <li class="nav-item">
                 <a
-                  class="nav-link git-btn"
+                  class="nav-link git-btn "
                   href="https://github.com/Maxii34/Organizador-de-Tareas"
                   ><i class="bi bi-github mx-1 fs-6 icon-btn"></i>Repocitorio</a
                 >
@@ -79,8 +79,15 @@
               </p>
 
               <!-- Input y botón para añadir tarea -->
-              <div class="card shadow mb-4">
-                <div class="card-body">
+              <div class="card shadow mb-4 css rounded-4">
+                <div class="card-body p-4">
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-3"
+                  >
+                    <span class="h5 text-light"
+                      ><i class="bi bi-inboxes"></i> Bandeja De Entrada</span
+                    >
+                  </div>
                   <div class="input-group">
                     <input
                       type="text"
@@ -94,7 +101,7 @@
                       id="btnAñadir"
                       aria-label="Añadir tarea"
                     >
-                      <i class="fas fa-plus"></i> Añadir
+                      <i class="bi bi-list-task"></i> Añadir
                     </button>
                   </div>
                 </div>
@@ -102,11 +109,11 @@
 
               <!-- Lista de tareas -->
               <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                  <h3 class="mb-0">Lista de Tareas</h3>
+                <div class="card-header text-white css">
+                  <h3 class="mb-0"><i class="bi bi-card-checklist"></i> Mi tablero</h3>
                 </div>
-                <div class="card-body">
-                  <div class="text-center my-2">
+                <div class="card-body tablero-bajo">
+                  <div class="text-center text-light my-2">
                     Bienvenido a tu organizador de tareas✨
                   </div>
 
