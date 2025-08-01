@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 html,
 body {
   height: 100%;
@@ -14,10 +16,20 @@ body {
 
 main {
   flex: 1 0 auto;
+  font-family: "Nata Sans", sans-serif;
+
 }
 
 footer {
   flex-shrink: 0;
+}
+
+nav, footer {
+  background-color: #001f3f;
+  color: #ffffff;
+  padding: 10px;
+  text-align: center;
+  font-family: "Nata Sans", sans-serif;
 }
 
 .git-btn {

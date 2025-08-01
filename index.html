@@ -23,11 +23,11 @@
   </head>
   <body>
     <header>
-      <nav
-        class="navbar navbar-expand-lg css shadow border-bottom"
-      >
+      <nav class="navbar navbar-expand-lg css shadow border-bottom">
         <div class="container">
-          <a class="navbar-brand text-light" href="/index.html">Organizador De Tareas</a>
+          <a class="navbar-brand text-light" href="/index.html"
+            >Organizador De Tareas</a
+          >
           <button
             class="navbar-toggler"
             type="button"
@@ -51,7 +51,7 @@
               </li>
               <li class="nav-item">
                 <a
-                  class="nav-link git-btn "
+                  class="nav-link git-btn"
                   href="https://github.com/Maxii34/Organizador-de-Tareas"
                   ><i class="bi bi-github mx-1 fs-6 icon-btn"></i>Repocitorio</a
                 >
@@ -59,7 +59,7 @@
               <li class="nav-item">
                 <a class="nav-link git-btn" href="https://github.com/Maxii34/"
                   ><i class="bi bi-person-lines-fill mx-1 fs-6 icon-btn"></i>
-                  Perfil Github</a
+                  Github</a
                 >
               </li>
             </ul>
@@ -69,7 +69,7 @@
     </header>
     <main class="container">
       <section class="mt-5">
-        <div class="container">
+        <div class="">
           <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-8">
               <!-- Título -->
@@ -93,7 +93,7 @@
                       type="text"
                       id="inputTarea"
                       class="form-control"
-                      placeholder="Introduce una nueva tarea..."
+                      placeholder="Introduce el titulo de la nueva tarea..."
                       aria-label="Nueva tarea"
                     />
                     <button
@@ -104,16 +104,29 @@
                       <i class="bi bi-list-task"></i> Añadir
                     </button>
                   </div>
+                  <div class="input-group-text mt-1">
+                    <label for="inputDescripcion" class="form-label"
+                      ></label
+                    >
+                    <textarea
+                      id="inputDescripcion"
+                      class="form-control"
+                      rows="1"
+                      placeholder="Descripción de la tarea..."
+                    ></textarea>
+                  </div>
                 </div>
               </div>
 
               <!-- Lista de tareas -->
               <div class="card shadow">
                 <div class="card-header text-white css">
-                  <h3 class="mb-0"><i class="bi bi-card-checklist"></i> Mi tablero</h3>
+                  <h3 class="mb-0">
+                    <i class="bi bi-card-checklist"></i> Mi tablero
+                  </h3>
                 </div>
                 <div class="card-body tablero-bajo">
-                  <div class="text-center text-light my-2">
+                  <div class="card text-center text-dark my-2">
                     Bienvenido a tu organizador de tareas✨
                   </div>
 
@@ -143,7 +156,7 @@
         <div class="row justify-content-center"></div>
       </section>
     </main>
-    <footer class="mt-5">
+    <footer class="smt-5">
       <div
         class="d-flex justify-content-center align-items-center bg-dark text-white py-3"
       >

@@ -1,6 +1,7 @@
 function main() {
   // Selección de elementos del DOM
   const inputTarea = document.getElementById("inputTarea");
+  const inputDescripcion = document.getElementById("inputDescripcion");
   const btnAñadir = document.getElementById("btnAñadir");
   const listaTareas = document.getElementById("listaTareas");
   const mensajeVacio = document.getElementById("mensajeVacio");
@@ -80,6 +81,11 @@ function main() {
     const divTexto = document.createElement("div");
     divTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
     divTexto.textContent = tarea.texto;
+    //descripción de la tarea
+    const divDescripcion = document.createElement("div");
+    divDescripcion.className = "text-muted small";
+    divDescripcion.textContent = tarea.descripcion || "Sin descripción";
+    divTexto.appendChild(divDescripcion);
 
     const divEstadoContainer = document.createElement("div");
     const spanEstado = document.createElement("span");
@@ -90,7 +96,7 @@ function main() {
     divSuperior.appendChild(divTexto);
     divSuperior.appendChild(divEstadoContainer);
 
-    // Parte inferior con fechas 
+    // Parte inferior con fechas
     const divInferior = document.createElement("div");
     divInferior.className = "mb-2";
 
@@ -104,9 +110,8 @@ function main() {
     )}`;
 
     const divFechaMod = document.createElement("div");
-    divFechaMod.className = "fecha-modificacion text-nowrap";
+    divFechaMod.className = "fecha-modificacion small text-muted text-nowrap d-none"; // Oculto inicialmente
     divFechaMod.textContent = `Modificada: ${formatearFecha(
-      tarea.fechaModificacion
     )}`;
 
     divFechas.appendChild(divFechaCreacion);
@@ -115,7 +120,8 @@ function main() {
 
     // Contenedor para los botones (Estado + Acciones)
     const divBotonesGeneral = document.createElement("div");
-    divBotonesGeneral.className = "d-flex justify-content-center flex-wrap gap-2";
+    divBotonesGeneral.className =
+      "d-flex justify-content-center flex-wrap gap-2";
 
     // Botón para cambiar estado
     const btnCambiarEstado = document.createElement("button");
@@ -189,11 +195,15 @@ function main() {
   // Evento para añadir una nueva tarea
   btnAñadir.addEventListener("click", () => {
     const textoTarea = inputTarea.value.trim();
+    const descripcionTarea = inputDescripcion.value.trim();
+
+    // Validar que el texto de la tarea no esté vacío
     if (textoTarea) {
       if (mensajeVacio) mensajeVacio.style.display = "none";
 
       const nuevaTarea = {
         texto: textoTarea,
+        descripcion: descripcionTarea, // ✔️ CORREGIDO
         estado: "Creada",
         fechaCreacion: new Date().toISOString(),
         fechaModificacion: new Date().toISOString(),
@@ -202,83 +212,140 @@ function main() {
       tareas.push(nuevaTarea);
       guardarTareasEnStorage();
       crearElementoTarea(nuevaTarea);
+
+      // Limpiar los campos
       inputTarea.value = "";
+      inputDescripcion.value = "";
     }
   });
 
-  // Delegación de eventos para botones de cada tarea
-  listaTareas.addEventListener("click", (e) => {
-    // Botón para cambiar estado
-    if (e.target.classList.contains("btn-success")) {
-      const li = e.target.closest("li");
-      const badge = li.querySelector(".badge");
-      const estadoActual = badge.textContent;
-      const nuevoEstado = cambiarEstado(estadoActual);
-      badge.className = `badge ${classePorEstado(nuevoEstado)}`;
-      badge.textContent = nuevoEstado;
-      const divFechaMod = li.querySelector(".fecha-modificacion");
-      divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
-      if (nuevoEstado === "Terminada") {
-        e.target.style.display = "none";
-      }
-    }
+if (e.target.classList.contains("btn-success")) {
+  const li = e.target.closest("li");
+  const badge = li.querySelector(".badge");
+  
+  const estadoActual = badge.textContent;
+  const nuevoEstado = cambiarEstado(estadoActual);
+  badge.className = `badge ${classePorEstado(nuevoEstado)}`;
+  badge.textContent = nuevoEstado;
+  
+  // Elimina estas líneas para que no muestre la fecha:
+  // const divFechaMod = li.querySelector(".fecha-modificacion");
+  // divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+  // divFechaMod.classList.remove("d-none");
+  
+  if (nuevoEstado === "Terminada") {
+    e.target.style.display = "none";
+  }
+}
 
-    // Botón para editar texto
+    // Botón para editar texto y descripción
     if (e.target.classList.contains("btn-primary")) {
       const li = e.target.closest("li");
       const divTexto = li.querySelector(".texto-tarea");
-      const textoActual = divTexto.textContent;
+      const divDescripcion = divTexto.querySelector("div");
 
+      const textoActual = divTexto.childNodes[0].nodeValue.trim();
+      const descripcionActual = divDescripcion
+        ? divDescripcion.textContent
+        : "";
+
+      // Input para texto
       const inputEditar = document.createElement("input");
       inputEditar.type = "text";
-      inputEditar.className = "form-control form-control-sm";
-      inputEditar.style.width = "100%";
+      inputEditar.className = "form-control form-control-sm mb-1";
       inputEditar.value = textoActual;
 
+      // Textarea para descripción
+      const textareaDescripcion = document.createElement("textarea");
+      textareaDescripcion.className = "form-control form-control-sm mb-1";
+      textareaDescripcion.rows = 2;
+      textareaDescripcion.value = descripcionActual;
+
+      // Botones de guardar y cancelar
       const btnGuardar = document.createElement("button");
-      btnGuardar.className = "btn btn-success btn-sm mx-1";
+      btnGuardar.className = "btn btn-success btn-sm me-1";
       btnGuardar.textContent = "✔";
 
       const btnCancelar = document.createElement("button");
-      btnCancelar.className = "btn btn-secondary btn-sm mx-1";
+      btnCancelar.className = "btn btn-secondary btn-sm";
       btnCancelar.textContent = "❌";
 
+      // Contenedor de edición
       const divEdicion = document.createElement("div");
-      divEdicion.className = "d-flex align-items-center";
-
+      divEdicion.className = "d-flex flex-column flex-grow-1";
       divEdicion.appendChild(inputEditar);
-      divEdicion.appendChild(btnGuardar);
-      divEdicion.appendChild(btnCancelar);
+      divEdicion.appendChild(textareaDescripcion);
 
+      const divBotonesEdicion = document.createElement("div");
+      divBotonesEdicion.className = "d-flex justify-content-end";
+      divBotonesEdicion.appendChild(btnGuardar);
+      divBotonesEdicion.appendChild(btnCancelar);
+
+      divEdicion.appendChild(divBotonesEdicion);
       divTexto.parentNode.replaceChild(divEdicion, divTexto);
+
       inputEditar.focus();
       inputEditar.select();
 
-      // Guardar texto editado
+      // Función para guardar edición
       function guardarEdicion() {
         const nuevoTexto = inputEditar.value.trim();
+        const nuevaDescripcion = textareaDescripcion.value.trim();
+
         if (nuevoTexto !== "") {
           const nuevoDivTexto = document.createElement("div");
-          nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea";
+          nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
           nuevoDivTexto.textContent = nuevoTexto;
+
+          const nuevoDivDescripcion = document.createElement("div");
+          nuevoDivDescripcion.className = "text-muted small";
+          nuevoDivDescripcion.textContent =
+            nuevaDescripcion || "Sin descripción";
+          nuevoDivTexto.appendChild(nuevoDivDescripcion);
+
           divEdicion.parentNode.replaceChild(nuevoDivTexto, divEdicion);
-          const liPadre = e.target.closest("li");
-          const divFechaMod = liPadre.querySelector(".fecha-modificacion");
+
+          // Actualizar el array y guardar
+          const indice = tareas.findIndex(
+            (t) =>
+              t.texto === textoActual &&
+              t.fechaCreacion ===
+                li.querySelector(".fecha-creacion").textContent.split(": ")[1]
+          );
+
+          if (indice !== -1) {
+            tareas[indice].texto = nuevoTexto;
+            tareas[indice].descripcion = nuevaDescripcion;
+            tareas[indice].fechaModificacion = new Date().toISOString();
+            guardarTareasEnStorage();
+          }
+
+          // Actualizar fecha de modificación visual
+          const divFechaMod = li.querySelector(".fecha-modificacion");
           divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+          divFechaMod.classList.remove("d-none"); // Mostrar fecha de modificación
         }
       }
 
-      // Cancelar edición
+      // Función para cancelar edición
       function cancelarEdicion() {
         const divTextoOriginal = document.createElement("div");
-        divTextoOriginal.className = "fw-bold flex-grow-1 texto-tarea";
+        divTextoOriginal.className = "fw-bold flex-grow-1 texto-tarea me-4";
         divTextoOriginal.textContent = textoActual;
+
+        const divDescripcionOriginal = document.createElement("div");
+        divDescripcionOriginal.className = "text-muted small";
+        divDescripcionOriginal.textContent =
+          descripcionActual || "Sin descripción";
+
+        divTextoOriginal.appendChild(divDescripcionOriginal);
         divEdicion.parentNode.replaceChild(divTextoOriginal, divEdicion);
       }
-      // Asignar eventos a los botones de edición
+
+      // Eventos
       btnGuardar.addEventListener("click", guardarEdicion);
       btnCancelar.addEventListener("click", cancelarEdicion);
-      // Permitir guardar con Enter
+
       inputEditar.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
           guardarEdicion();
