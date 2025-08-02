@@ -5,6 +5,7 @@ function main() {
   const btnAñadir = document.getElementById("btnAñadir");
   const listaTareas = document.getElementById("listaTareas");
   const mensajeVacio = document.getElementById("mensajeVacio");
+  const btnEliminarTodo = document.getElementById("btnEliminarTodo");
 
   // Cargar tareas desde localStorage o inicializar como arreglo vacío
   const tareas = JSON.parse(localStorage.getItem("tareas")) || [];
@@ -309,13 +310,13 @@ function main() {
       });
     }
 
-    // Botón: Ver (mostrar detalles)
+    // Botón: Ver (mostrar detalles) FALTA MODAL
     if (e.target.classList.contains("btn-info")) {
       const divTexto = li.querySelector(".texto-tarea");
       const badge = li.querySelector(".badge");
       const descripcion =
         li.querySelector(".text-muted.small")?.textContent || "Sin descripción";
-
+      //obcional: mostrar en un modal e eliminar alerta
       alert(`Tarea: ${divTexto.childNodes[0].nodeValue.trim()}
 Descripción: ${descripcion}
 Estado: ${badge.textContent}`);
