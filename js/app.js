@@ -5,6 +5,7 @@ function main() {
   const btnAñadir = document.getElementById("btnAñadir");
   const listaTareas = document.getElementById("listaTareas");
   const mensajeVacio = document.getElementById("mensajeVacio");
+  const btnEliminarTodo = document.getElementById("btnEliminarTodo");
   // Cargar tareas desde localStorage o inicializar como arreglo vacío
   const tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
@@ -13,17 +14,18 @@ function main() {
     localStorage.setItem("tareas", JSON.stringify(tareas));
   }
 
-  // Función para eliminar todas las tareas
-  function eliminarTareasEnStorage() {
-    localStorage.removeItem("tareas");
-    tareas.length = 0; // Vacía el array sin reasignar
-    listaTareas.innerHTML = "";
-    if (mensajeVacio) mensajeVacio.style.display = "block";
+  if (btnEliminarTodo) {
+    btnEliminarTodo.addEventListener("click", () => {
+      // Tu función para eliminar todo
+      eliminarTareasEnStorage();
+    });
   }
-
-  const btnEliminarTarea = document.getElementById("btnEliminar");
-  if (btnEliminarTarea) {
-    btnEliminarTarea.addEventListener("click", eliminarTareasEnStorage);
+  
+  function eliminarTareasEnStorage() {
+    localStorage.removeItem("tareas"); // Borra las tareas guardadas
+    tareas.splice(0, tareas.length); // Vacía el arreglo de tareas correctamente
+    listaTareas.innerHTML = ""; // Limpia la lista visual
+    if (mensajeVacio) mensajeVacio.style.display = "block"; // Muestra mensaje vacío
   }
 
   // Devuelve la fecha formateada al estilo español
@@ -103,6 +105,8 @@ function main() {
     divFechaCreacion.textContent = `Creada: ${formatearFecha(
       tarea.fechaCreacion
     )}`;
+    // <-- AGREGADO: guardamos fecha original en data-fecha para comparación
+    divFechaCreacion.setAttribute("data-fecha", tarea.fechaCreacion);
 
     const divFechaMod = document.createElement("div");
     divFechaMod.className =
@@ -322,9 +326,10 @@ Estado: ${badge.textContent}`);
 
     // Botón: Borrar
     if (e.target.classList.contains("btn-danger")) {
+      // <-- CAMBIO AQUÍ: usamos data-fecha para obtener la fecha original sin formatear
       const fechaCreacion = li
         .querySelector(".fecha-creacion")
-        .textContent.split(": ")[1];
+        .getAttribute("data-fecha");
       const indice = tareas.findIndex((t) => t.fechaCreacion === fechaCreacion);
       if (indice !== -1) {
         tareas.splice(indice, 1);
