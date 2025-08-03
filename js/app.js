@@ -5,8 +5,6 @@ function main() {
   const btnAñadir = document.getElementById("btnAñadir");
   const listaTareas = document.getElementById("listaTareas");
   const mensajeVacio = document.getElementById("mensajeVacio");
-  const btnEliminarTodo = document.getElementById("btnEliminarTodo");
-
   // Cargar tareas desde localStorage o inicializar como arreglo vacío
   const tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
