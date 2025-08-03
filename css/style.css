@@ -78,3 +78,30 @@ footer {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9);
   transform: translateY(-2px);
 }
+
+.columna1{
+  min-height: 500px;
+  max-height: 600px;
+  overflow: auto;
+}
+
+#listaTareas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 1rem; 
+  padding: 0; 
+  list-style: none; 
+}
+
+/* Media query para celulares */
+@media (max-width: 767px) {
+  #listaTareas {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+.bg-creado-css{
+border-left: 2px solid #001f3f;
+}

@@ -52,12 +52,16 @@
               <li class="nav-item">
                 <a
                   class="nav-link git-btn"
+                  target="_blank"
                   href="https://github.com/Maxii34/Organizador-de-Tareas"
                   ><i class="bi bi-github mx-1 fs-6 icon-btn"></i>Repocitorio</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link git-btn" href="https://github.com/Maxii34/"
+                <a
+                  class="nav-link git-btn"
+                  target="_blank"
+                  href="https://github.com/Maxii34/"
                   ><i class="bi bi-person-lines-fill mx-1 fs-6 icon-btn"></i>
                   Github</a
                 >
@@ -72,7 +76,7 @@
         <div class="">
           <div class="row justify-content-center">
             <div class="col-12 col-md-4 col-lg-4 my-2">
-              <div class="card shadow mb-4 css rounded-2 h-100 tarjeta">
+              <div class="card shadow mb-4 css rounded-2 columna1 tarjeta">
                 <!-- Input y botón para añadir tarea -->
                 <div class="card shadow mb-4 css rounded-4">
                   <div class="card-body p-4">
@@ -109,10 +113,20 @@
                       ></textarea>
                     </div>
                   </div>
+                  <div class="container">
+                    <p class="text-center text-light">
+                      Aquí puedes añadir tus nuevas tareas fácilmente. Escribe
+                      un <b class="text-info">título</b> claro y una
+                      <b class="text-info">descripción</b> detallada para
+                      organizarte mejor.
+                    </p>
+                  </div>
                 </div>
-                <div class="bg-dark-subtle shadow py-2">
+                <div class="bg-dark-subtle shadow py-1">
                   <!-- Título -->
-                  <h1 class="text-center my-4">Organiza tu día</h1>
+                  <h1 class="text-center my-4">
+                    <strong class="text-capitalize">Organiza tu día</strong>
+                  </h1>
                   <p class="text-center text-muted mb-4">
                     Añade tareas y gestioná tus pendientes fácilmente
                   </p>
@@ -142,13 +156,16 @@
                 <div class="card-body tablero-bajo">
                   <ul class="list-group" id="listaTareas">
                     <!-- Las tareas se añadirán aquí dinámicamente -->
-                    <li
-                      class="list-group-item text-center text-muted"
-                      id="mensajeVacio"
-                    >
-                      No hay tareas pendientes
-                    </li>
                   </ul>
+                  <li
+                    class="list-group-item text-center text-muted bg-light-subtle rounded-3 shadow"
+                    id="mensajeVacio"
+                  >
+                    <p class="my-1 shadow d-flex justify-content-center">
+                      <i class="bi bi-arrow-down-short fs-5"></i> No hay tareas
+                      pendientes <i class="bi bi-arrow-down-short fs-5"></i>
+                    </p>
+                  </li>
                 </div>
               </div>
             </div>

@@ -105,7 +105,7 @@ function main() {
     divFechaCreacion.textContent = `Creada: ${formatearFecha(
       tarea.fechaCreacion
     )}`;
-    // <-- AGREGADO: guardamos fecha original en data-fecha para comparación
+    // fecha original en data-fecha
     divFechaCreacion.setAttribute("data-fecha", tarea.fechaCreacion);
 
     const divFechaMod = document.createElement("div");
@@ -122,19 +122,19 @@ function main() {
     divInferior.appendChild(divFechaMod);
     divPrincipal.appendChild(divInferior);
 
-    // Botones: Estado, Editar, Ver, Borrar
+    // Botones: Estado, Editar, Ver, Borrar ------------
     const divBotones = document.createElement("div");
-    divBotones.className = "d-flex justify-content-center flex-wrap gap-2";
+    divBotones.className = "d-flex justify-content-end flex-wrap gap-2 ";
 
     const btnEstado = document.createElement("button");
-    btnEstado.className = "btn btn-success btn-sm";
+    btnEstado.className = "btn btn-success btn-sm shadow";
     btnEstado.textContent = "Estado";
     if (tarea.estado === "Terminada") {
       btnEstado.style.display = "none";
     }
 
     const btnEditar = document.createElement("button");
-    btnEditar.className = "btn btn-primary btn-sm";
+    btnEditar.className = "btn btn-primary btn-sm ";
     btnEditar.textContent = "Editar";
 
     const btnVer = document.createElement("button");
@@ -192,9 +192,10 @@ function main() {
 
     // Ocultar mensaje vacío
     if (mensajeVacio) mensajeVacio.style.display = "none";
+    console.log(mensajeVacio)
   });
 
-  // Delegación de eventos en la lista de tareas
+  // Evento: Manejar clics en la lista de tareas
   listaTareas.addEventListener("click", (e) => {
     const li = e.target.closest("li");
     if (!li) return;
@@ -207,7 +208,7 @@ function main() {
 
       badge.textContent = nuevoEstado;
       badge.className = `badge ${classePorEstado(nuevoEstado)}`;
-
+      // Actualizar el estado en el arreglo de tareas
       const fechaCreacion = li
         .querySelector(".fecha-creacion")
         .textContent.split(": ")[1];
@@ -250,11 +251,11 @@ function main() {
 
       const btnGuardar = document.createElement("button");
       btnGuardar.className = "btn btn-success btn-sm me-1";
-      btnGuardar.textContent = "✔";
+      btnGuardar.textContent = "Aceptar";
 
       const btnCancelar = document.createElement("button");
-      btnCancelar.className = "btn btn-secondary btn-sm";
-      btnCancelar.textContent = "❌";
+      btnCancelar.className = "btn btn-danger btn-sm";
+      btnCancelar.textContent = "Cancelar";
 
       const divEdicion = document.createElement("div");
       divEdicion.className = "d-flex flex-column flex-grow-1";
@@ -326,7 +327,6 @@ Estado: ${badge.textContent}`);
 
     // Botón: Borrar
     if (e.target.classList.contains("btn-danger")) {
-      // <-- CAMBIO AQUÍ: usamos data-fecha para obtener la fecha original sin formatear
       const fechaCreacion = li
         .querySelector(".fecha-creacion")
         .getAttribute("data-fecha");
