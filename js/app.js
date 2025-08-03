@@ -1,9 +1,11 @@
 function main() {
   // Selección de elementos del DOM
   const inputTarea = document.getElementById("inputTarea");
+  const inputDescripcion = document.getElementById("inputDescripcion");
   const btnAñadir = document.getElementById("btnAñadir");
   const listaTareas = document.getElementById("listaTareas");
   const mensajeVacio = document.getElementById("mensajeVacio");
+  const btnEliminarTodo = document.getElementById("btnEliminarTodo");
 
   // Cargar tareas desde localStorage o inicializar como arreglo vacío
   const tareas = JSON.parse(localStorage.getItem("tareas")) || [];
@@ -12,12 +14,13 @@ function main() {
   function guardarTareasEnStorage() {
     localStorage.setItem("tareas", JSON.stringify(tareas));
   }
-  //funcion para eliminar tareas guardadas en localStorage
+
+  // Función para eliminar todas las tareas
   function eliminarTareasEnStorage() {
     localStorage.removeItem("tareas");
     tareas.length = 0; // Vacía el array sin reasignar
     listaTareas.innerHTML = "";
-    if (mensajeVacio) mensajeVacio.style.display = "";
+    if (mensajeVacio) mensajeVacio.style.display = "block";
   }
 
   const btnEliminarTarea = document.getElementById("btnEliminar");
@@ -55,7 +58,7 @@ function main() {
     const estados = ["Creada", "En proceso", "Terminada"];
     const indexActual = estados.indexOf(estadoActual);
     const siguienteIndex = indexActual + 1;
-    if (estadoActual === "Terminada") {
+    if (estadoActual === "Terminada" || indexActual === -1) {
       return estadoActual;
     }
     return estados[siguienteIndex];
@@ -63,16 +66,15 @@ function main() {
 
   // Crea visualmente un elemento de tarea y lo añade al DOM
   function crearElementoTarea(tarea) {
-    const fechaActual = new Date();
     const li = document.createElement("li");
     li.className =
       "list-group-item shadow-sm my-2 p-0 border border-secondary rounded";
 
     // Contenedor principal
     const divPrincipal = document.createElement("div");
-    divPrincipal.className = " d-flex flex-column p-2";
+    divPrincipal.className = "d-flex flex-column p-2";
 
-    // Parte superior con texto y estado
+    // Parte superior: texto + estado
     const divSuperior = document.createElement("div");
     divSuperior.className =
       "d-flex justify-content-between align-items-start mb-2";
@@ -81,21 +83,22 @@ function main() {
     divTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
     divTexto.textContent = tarea.texto;
 
-    const divEstadoContainer = document.createElement("div");
+    const divDescripcion = document.createElement("div");
+    divDescripcion.className = "text-muted small";
+    divDescripcion.textContent = tarea.descripcion || "Sin descripción";
+    divTexto.appendChild(divDescripcion);
+
     const spanEstado = document.createElement("span");
     spanEstado.className = `badge ${classePorEstado(tarea.estado)}`;
     spanEstado.textContent = tarea.estado;
 
-    divEstadoContainer.appendChild(spanEstado);
     divSuperior.appendChild(divTexto);
-    divSuperior.appendChild(divEstadoContainer);
+    divSuperior.appendChild(spanEstado);
+    divPrincipal.appendChild(divSuperior);
 
-    // Parte inferior con fechas 
+    // Parte inferior: fechas
     const divInferior = document.createElement("div");
     divInferior.className = "mb-2";
-
-    const divFechas = document.createElement("div");
-    divFechas.className = "small text-muted";
 
     const divFechaCreacion = document.createElement("div");
     divFechaCreacion.className = "fecha-creacion text-nowrap";
@@ -104,205 +107,239 @@ function main() {
     )}`;
 
     const divFechaMod = document.createElement("div");
-    divFechaMod.className = "fecha-modificacion text-nowrap";
-    divFechaMod.textContent = `Modificada: ${formatearFecha(
-      tarea.fechaModificacion
-    )}`;
-
-    divFechas.appendChild(divFechaCreacion);
-    divFechas.appendChild(divFechaMod);
-    divInferior.appendChild(divFechas);
-
-    // Contenedor para los botones (Estado + Acciones)
-    const divBotonesGeneral = document.createElement("div");
-    divBotonesGeneral.className = "d-flex justify-content-center flex-wrap gap-2";
-
-    // Botón para cambiar estado
-    const btnCambiarEstado = document.createElement("button");
-    btnCambiarEstado.className = "btn btn-success btn-sm";
-    btnCambiarEstado.textContent = "Estado";
-    if (tarea.estado === "Terminada") {
-      btnCambiarEstado.style.display = "none";
+    divFechaMod.className =
+      "fecha-modificacion small text-muted text-nowrap d-none";
+    if (tarea.fechaModificacion) {
+      divFechaMod.textContent = `Modificada: ${formatearFecha(
+        tarea.fechaModificacion
+      )}`;
+      divFechaMod.classList.remove("d-none");
     }
-    btnCambiarEstado.addEventListener("click", () => {
-      const nuevoEstado = cambiarEstado(tarea.estado);
-      tarea.estado = nuevoEstado;
-      tarea.fechaModificacion = new Date().toISOString();
-      guardarTareasEnStorage();
-    });
 
-    // Contenedor de botones Editar / Leer / Borrar
-    const divAcciones = document.createElement("div");
-    divAcciones.className = "d-flex flex-wrap gap-2";
+    divInferior.appendChild(divFechaCreacion);
+    divInferior.appendChild(divFechaMod);
+    divPrincipal.appendChild(divInferior);
+
+    // Botones: Estado, Editar, Ver, Borrar
+    const divBotones = document.createElement("div");
+    divBotones.className = "d-flex justify-content-center flex-wrap gap-2";
+
+    const btnEstado = document.createElement("button");
+    btnEstado.className = "btn btn-success btn-sm";
+    btnEstado.textContent = "Estado";
+    if (tarea.estado === "Terminada") {
+      btnEstado.style.display = "none";
+    }
 
     const btnEditar = document.createElement("button");
     btnEditar.className = "btn btn-primary btn-sm";
     btnEditar.textContent = "Editar";
 
-    const btnLeer = document.createElement("button");
-    btnLeer.className = "btn btn-info btn-sm";
-    btnLeer.textContent = "Leer";
+    const btnVer = document.createElement("button");
+    btnVer.className = "btn btn-info btn-sm";
+    btnVer.textContent = "Ver";
 
     const btnBorrar = document.createElement("button");
     btnBorrar.className = "btn btn-danger btn-sm";
     btnBorrar.textContent = "Borrar";
 
-    btnBorrar.addEventListener("click", () => {
-      const indice = tareas.findIndex(
-        (t) =>
-          t.texto === tarea.texto && t.fechaCreacion === tarea.fechaCreacion
-      );
+    divBotones.appendChild(btnEstado);
+    divBotones.appendChild(btnEditar);
+    divBotones.appendChild(btnVer);
+    divBotones.appendChild(btnBorrar);
 
-      if (indice !== -1) {
-        tareas.splice(indice, 1);
-        guardarTareasEnStorage();
-      }
-
-      li.remove();
-
-      if (tareas.length === 0 && mensajeVacio) {
-        mensajeVacio.style.display = "block";
-      }
-    });
-
-    // Armar botones
-    divAcciones.appendChild(btnEditar);
-    divAcciones.appendChild(btnLeer);
-    divAcciones.appendChild(btnBorrar);
-
-    divBotonesGeneral.appendChild(btnCambiarEstado);
-    divBotonesGeneral.appendChild(divAcciones);
-
-    // Ensamblar toda la tarea
-    divPrincipal.appendChild(divSuperior); // Texto + Estado
-    divPrincipal.appendChild(divInferior); // Fechas
-    divPrincipal.appendChild(divBotonesGeneral); // Botones debajo
-
+    divPrincipal.appendChild(divBotones);
     li.appendChild(divPrincipal);
     listaTareas.appendChild(li);
   }
 
-  // Mostrar tareas guardadas al iniciar
-  if (tareas.length > 0 && mensajeVacio) mensajeVacio.style.display = "none";
-  tareas.forEach((t) => crearElementoTarea(t));
+  // Mostrar tareas guardadas al cargar
+  if (tareas.length > 0 && mensajeVacio) {
+    mensajeVacio.style.display = "none";
+  } else if (mensajeVacio) {
+    mensajeVacio.style.display = "block";
+  }
 
-  // Evento para añadir una nueva tarea
+  tareas.forEach((tarea) => crearElementoTarea(tarea));
+
+  // Evento: Añadir nueva tarea
   btnAñadir.addEventListener("click", () => {
-    const textoTarea = inputTarea.value.trim();
-    if (textoTarea) {
-      if (mensajeVacio) mensajeVacio.style.display = "none";
+    const texto = inputTarea.value.trim();
+    const descripcion = inputDescripcion.value.trim();
 
-      const nuevaTarea = {
-        texto: textoTarea,
-        estado: "Creada",
-        fechaCreacion: new Date().toISOString(),
-        fechaModificacion: new Date().toISOString(),
-      };
-
-      tareas.push(nuevaTarea);
-      guardarTareasEnStorage();
-      crearElementoTarea(nuevaTarea);
-      inputTarea.value = "";
+    if (!texto) {
+      alert("La tarea no puede estar vacía.");
+      return;
     }
+
+    const nuevaTarea = {
+      texto,
+      descripcion,
+      estado: "Creada",
+      fechaCreacion: new Date().toISOString(),
+      fechaModificacion: new Date().toISOString(),
+    };
+
+    tareas.push(nuevaTarea);
+    guardarTareasEnStorage();
+    crearElementoTarea(nuevaTarea);
+
+    // Limpiar campos
+    inputTarea.value = "";
+    inputDescripcion.value = "";
+
+    // Ocultar mensaje vacío
+    if (mensajeVacio) mensajeVacio.style.display = "none";
   });
 
-  // Delegación de eventos para botones de cada tarea
+  // Delegación de eventos en la lista de tareas
   listaTareas.addEventListener("click", (e) => {
-    // Botón para cambiar estado
+    const li = e.target.closest("li");
+    if (!li) return;
+
+    // Botón: Cambiar estado
     if (e.target.classList.contains("btn-success")) {
-      const li = e.target.closest("li");
       const badge = li.querySelector(".badge");
       const estadoActual = badge.textContent;
       const nuevoEstado = cambiarEstado(estadoActual);
-      badge.className = `badge ${classePorEstado(nuevoEstado)}`;
+
       badge.textContent = nuevoEstado;
+      badge.className = `badge ${classePorEstado(nuevoEstado)}`;
+
+      const fechaCreacion = li
+        .querySelector(".fecha-creacion")
+        .textContent.split(": ")[1];
+      const indice = tareas.findIndex((t) => t.fechaCreacion === fechaCreacion);
+      if (indice !== -1) {
+        tareas[indice].estado = nuevoEstado;
+        tareas[indice].fechaModificacion = new Date().toISOString();
+        guardarTareasEnStorage();
+      }
+
+      // Mostrar fecha de modificación
       const divFechaMod = li.querySelector(".fecha-modificacion");
       divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+      divFechaMod.classList.remove("d-none");
+
+      // Ocultar botón si está terminada
       if (nuevoEstado === "Terminada") {
         e.target.style.display = "none";
       }
     }
 
-    // Botón para editar texto
+    // Botón: Editar
     if (e.target.classList.contains("btn-primary")) {
-      const li = e.target.closest("li");
       const divTexto = li.querySelector(".texto-tarea");
-      const textoActual = divTexto.textContent;
+      const divDescripcion = divTexto.querySelector(".text-muted.small");
+      const textoActual = divTexto.childNodes[0].nodeValue.trim();
+      const descripcionActual = divDescripcion
+        ? divDescripcion.textContent
+        : "";
 
-      const inputEditar = document.createElement("input");
-      inputEditar.type = "text";
-      inputEditar.className = "form-control form-control-sm";
-      inputEditar.style.width = "100%";
-      inputEditar.value = textoActual;
+      const inputTexto = document.createElement("input");
+      inputTexto.type = "text";
+      inputTexto.className = "form-control form-control-sm mb-1";
+      inputTexto.value = textoActual;
+
+      const textareaDesc = document.createElement("textarea");
+      textareaDesc.className = "form-control form-control-sm mb-1";
+      textareaDesc.rows = 2;
+      textareaDesc.value = descripcionActual;
 
       const btnGuardar = document.createElement("button");
-      btnGuardar.className = "btn btn-success btn-sm mx-1";
+      btnGuardar.className = "btn btn-success btn-sm me-1";
       btnGuardar.textContent = "✔";
 
       const btnCancelar = document.createElement("button");
-      btnCancelar.className = "btn btn-secondary btn-sm mx-1";
+      btnCancelar.className = "btn btn-secondary btn-sm";
       btnCancelar.textContent = "❌";
 
       const divEdicion = document.createElement("div");
-      divEdicion.className = "d-flex align-items-center";
-
-      divEdicion.appendChild(inputEditar);
-      divEdicion.appendChild(btnGuardar);
-      divEdicion.appendChild(btnCancelar);
+      divEdicion.className = "d-flex flex-column flex-grow-1";
+      divEdicion.appendChild(inputTexto);
+      divEdicion.appendChild(textareaDesc);
+      divEdicion
+        .appendChild(document.createElement("div"))
+        .append(btnGuardar, btnCancelar);
 
       divTexto.parentNode.replaceChild(divEdicion, divTexto);
-      inputEditar.focus();
-      inputEditar.select();
 
-      // Guardar texto editado
-      function guardarEdicion() {
-        const nuevoTexto = inputEditar.value.trim();
-        if (nuevoTexto !== "") {
-          const nuevoDivTexto = document.createElement("div");
-          nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea";
-          nuevoDivTexto.textContent = nuevoTexto;
-          divEdicion.parentNode.replaceChild(nuevoDivTexto, divEdicion);
-          const liPadre = e.target.closest("li");
-          const divFechaMod = liPadre.querySelector(".fecha-modificacion");
-          divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+      const guardar = () => {
+        const nuevoTexto = inputTexto.value.trim();
+        if (!nuevoTexto) {
+          alert("El texto no puede estar vacío.");
+          return;
         }
-      }
+        const nuevaDesc = textareaDesc.value.trim();
 
-      // Cancelar edición
-      function cancelarEdicion() {
-        const divTextoOriginal = document.createElement("div");
-        divTextoOriginal.className = "fw-bold flex-grow-1 texto-tarea";
-        divTextoOriginal.textContent = textoActual;
-        divEdicion.parentNode.replaceChild(divTextoOriginal, divEdicion);
-      }
-      // Asignar eventos a los botones de edición
-      btnGuardar.addEventListener("click", guardarEdicion);
-      btnCancelar.addEventListener("click", cancelarEdicion);
-      // Permitir guardar con Enter
-      inputEditar.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-          guardarEdicion();
+        const nuevoDivTexto = document.createElement("div");
+        nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
+        nuevoDivTexto.textContent = nuevoTexto;
+
+        const nuevoDivDesc = document.createElement("div");
+        nuevoDivDesc.className = "text-muted small";
+        nuevoDivDesc.textContent = nuevaDesc || "Sin descripción";
+        nuevoDivTexto.appendChild(nuevoDivDesc);
+
+        divEdicion.parentNode.replaceChild(nuevoDivTexto, divEdicion);
+
+        const fechaCreacion = li
+          .querySelector(".fecha-creacion")
+          .textContent.split(": ")[1];
+        const indice = tareas.findIndex(
+          (t) => t.fechaCreacion === fechaCreacion
+        );
+        if (indice !== -1) {
+          tareas[indice].texto = nuevoTexto;
+          tareas[indice].descripcion = nuevaDesc;
+          tareas[indice].fechaModificacion = new Date().toISOString();
+          guardarTareasEnStorage();
         }
+
+        const divFechaMod = li.querySelector(".fecha-modificacion");
+        divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+        divFechaMod.classList.remove("d-none");
+      };
+
+      btnGuardar.addEventListener("click", guardar);
+      btnCancelar.addEventListener("click", () => {
+        divEdicion.parentNode.replaceChild(divTexto, divEdicion);
+      });
+      inputTexto.addEventListener("keypress", (ev) => {
+        if (ev.key === "Enter") guardar();
       });
     }
 
-    // Botón para borrar tarea
-    if (e.target.classList.contains("btn-danger")) {
-      e.target.closest("li").remove();
-      if (listaTareas.querySelectorAll("li").length === 0 && mensajeVacio) {
-        mensajeVacio.style.display = "";
-      }
-    }
-
-    // Botón para leer tarea (alert con detalles)
+    // Botón: Ver (mostrar detalles) FALTA MODAL
     if (e.target.classList.contains("btn-info")) {
-      const li = e.target.closest("li");
       const divTexto = li.querySelector(".texto-tarea");
       const badge = li.querySelector(".badge");
-      alert(`Tarea: ${divTexto.textContent}\nEstado: ${badge.textContent}`);
+      const descripcion =
+        li.querySelector(".text-muted.small")?.textContent || "Sin descripción";
+      //obcional: mostrar en un modal e eliminar alerta
+      alert(`Tarea: ${divTexto.childNodes[0].nodeValue.trim()}
+Descripción: ${descripcion}
+Estado: ${badge.textContent}`);
+    }
+
+    // Botón: Borrar
+    if (e.target.classList.contains("btn-danger")) {
+      const fechaCreacion = li
+        .querySelector(".fecha-creacion")
+        .textContent.split(": ")[1];
+      const indice = tareas.findIndex((t) => t.fechaCreacion === fechaCreacion);
+      if (indice !== -1) {
+        tareas.splice(indice, 1);
+        guardarTareasEnStorage();
+      }
+      li.remove();
+
+      if (tareas.length === 0 && mensajeVacio) {
+        mensajeVacio.style.display = "block";
+      }
     }
   });
 }
 
-// Ejecutar función main al cargar la página
+// Ejecutar al cargar la página
 window.addEventListener("load", main);

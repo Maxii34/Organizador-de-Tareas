@@ -23,11 +23,11 @@
   </head>
   <body>
     <header>
-      <nav
-        class="navbar navbar-expand-lg bg-body-tertiary shadow border-bottom"
-      >
+      <nav class="navbar navbar-expand-lg css shadow border-bottom">
         <div class="container">
-          <a class="navbar-brand" href="/index.html">Organizador De Tareas</a>
+          <a class="navbar-brand text-light" href="/index.html"
+            >Organizador De Tareas</a
+          >
           <button
             class="navbar-toggler"
             type="button"
@@ -43,7 +43,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a
-                  class="nav-link active"
+                  class="nav-link active text-light"
                   aria-current="page"
                   href="/index.html"
                   >Inicio</a
@@ -59,7 +59,7 @@
               <li class="nav-item">
                 <a class="nav-link git-btn" href="https://github.com/Maxii34/"
                   ><i class="bi bi-person-lines-fill mx-1 fs-6 icon-btn"></i>
-                  Perfil Github</a
+                  Github</a
                 >
               </li>
             </ul>
@@ -67,48 +67,71 @@
         </div>
       </nav>
     </header>
-    <main class="container">
-      <section class="mt-5">
-        <div class="container">
+    <main class="container-fluid">
+      <section class="mt-2">
+        <div class="">
           <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-              <!-- Título -->
-              <h1 class="text-center my-4">Organiza tu día</h1>
-              <p class="text-center text-muted mb-4">
-                Añade tareas y gestioná tus pendientes fácilmente
-              </p>
-
-              <!-- Input y botón para añadir tarea -->
-              <div class="card shadow mb-4">
-                <div class="card-body">
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      id="inputTarea"
-                      class="form-control"
-                      placeholder="Introduce una nueva tarea..."
-                      aria-label="Nueva tarea"
-                    />
-                    <button
-                      class="btn btn-primary"
-                      id="btnAñadir"
-                      aria-label="Añadir tarea"
+            <div class="col-12 col-md-4 col-lg-4 my-2">
+              <div class="card shadow mb-4 css rounded-2 h-100 tarjeta">
+                <!-- Input y botón para añadir tarea -->
+                <div class="card shadow mb-4 css rounded-4">
+                  <div class="card-body p-4">
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-3"
                     >
-                      <i class="fas fa-plus"></i> Añadir
-                    </button>
+                      <span class="h5 text-light"
+                        ><i class="bi bi-inboxes"></i> Bandeja De Entrada</span
+                      >
+                    </div>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        id="inputTarea"
+                        class="form-control"
+                        placeholder="Introduce el titulo de la nueva tarea..."
+                        aria-label="Nueva tarea"
+                      />
+                      <button
+                        class="btn btn-primary"
+                        id="btnAñadir"
+                        aria-label="Añadir tarea"
+                      >
+                        <i class="bi bi-list-task"></i> Añadir
+                      </button>
+                    </div>
+                    <div class="input-group-text mt-1">
+                      <label for="inputDescripcion" class="form-label"></label>
+                      <textarea
+                        id="inputDescripcion"
+                        class="form-control"
+                        rows="1"
+                        placeholder="Descripción de la tarea..."
+                      ></textarea>
+                    </div>
                   </div>
+                </div>
+                <div class="bg-dark-subtle shadow py-2 ">
+                  <!-- Título -->
+                  <h1 class="text-center my-4">Organiza tu día</h1>
+                  <p class="text-center text-muted mb-4">
+                    Añade tareas y gestioná tus pendientes fácilmente
+                  </p>
                 </div>
               </div>
-
+            </div>
+            <div class="col-12 col-md-8 col-lg-8 my-2">
               <!-- Lista de tareas -->
-              <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                  <h3 class="mb-0">Lista de Tareas</h3>
+              <div class="card shadow tarjeta">
+                <div class="card-header text-white css d-flex justify-content-between align-items-center">
+                  <h3 class="mb-0">
+                    <i class="bi bi-card-checklist"></i> Mi tablero 
+                  </h3>
+                  <button class="rounded-5 shadow text-light" id="btnEliminarTodo"><i class="bi bi-trash text-dark"></i></button>
                 </div>
-                <div class="card-body">
-                  <div class="text-center my-2">
-                    Bienvenido a tu organizador de tareas✨
-                  </div>
+                <div class=" text-center text-dark bg-dark-subtle ">
+                  <p class="m-0 ">Bienvenido a tu organizador de tareas ✨</p>
+                </div>
+                <div class="card-body tablero-bajo">
 
                   <ul class="list-group" id="listaTareas">
                     <!-- Las tareas se añadirán aquí dinámicamente -->
@@ -136,7 +159,7 @@
         <div class="row justify-content-center"></div>
       </section>
     </main>
-    <footer class="mt-5">
+    <footer class="smt-5">
       <div
         class="d-flex justify-content-center align-items-center bg-dark text-white py-3"
       >
