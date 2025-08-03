@@ -80,9 +80,16 @@ footer {
 }
 
 .columna1{
-  min-height: 500px;
-  max-height: 600px;
+  min-height: 700px;
+  max-height: 800px;
   overflow: auto;
+}
+
+@media only screen and (max-width: 767px) {
+  .columna1 {
+    min-height: 500px;
+    max-height: 600px;
+  }
 }
 
 #listaTareas {
@@ -100,8 +107,80 @@ footer {
   }
 }
 
+/* Estilis para los btn de las cards Tareas*/
+/* Botón: Estado*/
+.btn-success {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.btn-success:hover {
+  background-color: #157347;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
 
-.bg-creado-css{
-border-left: 2px solid #001f3f;
+/* Botón: Editar*/
+.btn-primary {
+  background-color: #ffc107;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e0a800;
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+/* Botón: ver*/
+.btn-info {
+  background-color: #0d6efd;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra oscura y neutra */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+  background-color: #0b5ed7;
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Sombra más fuerte en hover */
+  transform: translateY(-1px);
+}
+
+/* Botón: Borrar*/
+.btn-danger { 
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
 }
