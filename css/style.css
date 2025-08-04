@@ -238,3 +238,11 @@ footer {
 .tarea-item {
   transition: all 0.3s ease;
 }
+
+/* Deshabilita el resize para TODOS los textareas */
+textarea.form-control {
+  resize: none;
+}
+#inputDescripcion {
+  resize: none;
+}

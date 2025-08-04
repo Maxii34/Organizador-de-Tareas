@@ -264,12 +264,40 @@ function main() {
       const inputTexto = document.createElement("input");
       inputTexto.type = "text";
       inputTexto.className = "form-control form-control-sm mb-1";
+      inputTexto.placeholder = "Actualiza título...";
       inputTexto.value = textoActual;
+
+      // Establece límites 
+      inputTexto.minLength = 3; 
+      inputTexto.maxLength = 50; 
+
+      // Validación en tiempo real
+      inputTexto.addEventListener("input", function () {
+        if (this.value.length > this.maxLength) {
+          this.value = this.value.slice(0, this.maxLength);
+        }
+      });
 
       const textareaDesc = document.createElement("textarea");
       textareaDesc.className = "form-control form-control-sm mb-1";
       textareaDesc.rows = 2;
+      textareaDesc.placeholder = "Añade la Descripción...";
       textareaDesc.value = descripcionActual;
+
+      // Establece límites
+      textareaDesc.minLength = 5;
+      textareaDesc.maxLength = 100; 
+
+      // Deshabilitar redimensión
+      textareaDesc.style.resize = "none";
+
+      // Control de caracteres en tiempo real
+      textareaDesc.addEventListener("input", function () {
+        // Limitar a maxLength caracteres
+        if (this.value.length > this.maxLength) {
+          this.value = this.value.slice(0, this.maxLength);
+        }
+      });
 
       const btnGuardar = document.createElement("button");
       btnGuardar.className = "btn btn-success btn-sm me-1";
