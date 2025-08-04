@@ -39,37 +39,49 @@ function main() {
     });
   }
 
-  // Devuelve clases de estilo según el estado de la tarea
-  function classePorEstado(estado) {
-    switch (estado) {
-      case "Creada":
-        return "bg-success-subtle text-dark shadow border border-success";
-      case "En proceso":
-        return "bg-warning-subtle text-dark shadow border border-warning";
-      case "Terminada":
-        return "bg-danger-subtle text-dark shadow border border-danger";
-      default:
-        return "bg-secondary-subtle text-dark shadow border border-secondary";
-    }
+// Función para clases de Bootstrap (badges, pequeños elementos)
+function classePorEstado(estado) {
+  switch (estado) {
+    case "Creada":
+      return "bg-success-subtle text-dark shadow border border-success";
+    case "Pendiente":
+      return "bg-secondary-subtle text-dark shadow border border-secondary";
+    case "En proceso":
+      return "bg-warning-subtle text-dark shadow border border-warning";
+    case "En revisión":
+      return "bg-info-subtle text-dark shadow border border-info";
+    case "Terminada":
+      return "bg-danger-subtle text-dark shadow border border-danger";
+    case "Bloqueada":
+      return "bg-dark-subtle text-dark shadow border border-dark";
+    default:
+      return "bg-light-subtle text-dark shadow border border-light";
   }
+}
 
-  // Ahora esta función usa tus clases personalizadas
-  function classePorEsTareas(estado) {
-    switch (estado) {
-      case "Creada":
-        return "itemEstado-creado text-dark";
-      case "En proceso":
-        return "itemEstado-en-proceso text-dark";
-      case "Terminada":
-        return "itemEstado-terminada text-dark";
-      default:
-        return "itemEstado-default text-dark";
-    }
+// Función para clases personalizadas (tarjetas principales)
+function classePorEsTareas(estado) {
+  switch (estado) {
+    case "Creada":
+      return "itemEstado-creado text-dark";
+    case "Pendiente":
+      return "itemEstado-pendiente text-dark";
+    case "En proceso":
+      return "itemEstado-en-proceso text-dark";
+    case "En revisión":
+      return "itemEstado-en-revision text-dark"; // Corregí "revicion" por "revision"
+    case "Terminada":
+      return "itemEstado-terminada text-dark";
+    case "Bloqueada":
+      return "itemEstado-bloqueada text-dark";
+    default:
+      return "itemEstado-creado text-dark";
   }
+}
 
   // Cambia el estado actual de la tarea al siguiente
   function cambiarEstado(estadoActual) {
-    const estados = ["Creada", "En proceso", "Terminada"];
+    const estados = ["Creada", "Pendiente", "En proceso", "En revisión", "Terminada"];
     const indexActual = estados.indexOf(estadoActual);
     const siguienteIndex = indexActual + 1;
     if (estadoActual === "Terminada" || indexActual === -1) {
