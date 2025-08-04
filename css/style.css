@@ -184,3 +184,16 @@ footer {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
   transform: translateY(-1px);
 }
+
+.tarea-item {
+  
+  background-color: #e9f0ff;
+  border: 1px solid #dee2e6; 
+  border-radius: 3px; 
+  padding: 5px;
+  margin-top: 0.5rem; 
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); 
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  list-style: none;
+}

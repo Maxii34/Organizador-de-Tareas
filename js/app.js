@@ -68,7 +68,7 @@ function main() {
   function crearElementoTarea(tarea) {
     const li = document.createElement("li");
     li.className =
-      "list-group-item shadow-sm my-2 p-0 border border-secondary rounded";
+      "tarea-item";
 
     // Contenedor principal
     const divPrincipal = document.createElement("div");
