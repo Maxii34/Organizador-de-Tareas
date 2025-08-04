@@ -39,7 +39,7 @@ function main() {
     });
   }
 
-// Función para clases de Bootstrap (badges, pequeños elementos)
+// Función para clases de Bootstrap (badges)
 function classePorEstado(estado) {
   switch (estado) {
     case "Creada":
@@ -50,16 +50,14 @@ function classePorEstado(estado) {
       return "bg-warning-subtle text-dark shadow border border-warning";
     case "En revisión":
       return "bg-info-subtle text-dark shadow border border-info";
-    case "Terminada":
+    case "Terminada": // Corregido "Terminadao" a "Terminado"
       return "bg-danger-subtle text-dark shadow border border-danger";
-    case "Bloqueada":
-      return "bg-dark-subtle text-dark shadow border border-dark";
     default:
       return "bg-light-subtle text-dark shadow border border-light";
   }
 }
 
-// Función para clases personalizadas (tarjetas principales)
+// Función para clases personalizadas (tarjetas)
 function classePorEsTareas(estado) {
   switch (estado) {
     case "Creada":
@@ -69,13 +67,11 @@ function classePorEsTareas(estado) {
     case "En proceso":
       return "itemEstado-en-proceso text-dark";
     case "En revisión":
-      return "itemEstado-en-revision text-dark"; // Corregí "revicion" por "revision"
-    case "Terminada":
+      return "itemEstado-en-revision text-dark";
+    case "Terminada": // Asegúrate de usar el mismo nombre en ambos casos
       return "itemEstado-terminada text-dark";
-    case "Bloqueada":
-      return "itemEstado-bloqueada text-dark";
     default:
-      return "itemEstado-creado text-dark";
+      return "itemEstado-terminada text-dark";
   }
 }
 
@@ -148,8 +144,9 @@ function classePorEsTareas(estado) {
     divBotones.className = "d-flex justify-content-end flex-wrap gap-1 ";
 
     const btnEstado = document.createElement("button");
-    btnEstado.className = "btn btn-success btn-sm shadow";
-    btnEstado.textContent = "Estado";
+    btnEstado.className = "btn btn-success btn-sm shadow btn-estado";
+    btnEstado.innerHTML = '<i class="bi bi-chevron-double-right"></i>';
+    btnEstado.querySelector('i').style.pointerEvents = 'none';
     if (tarea.estado === "Terminada") {
       btnEstado.style.display = "none";
     }
@@ -233,7 +230,7 @@ function classePorEsTareas(estado) {
       // 2. Actualiza el contenedor principal (li)
       li.className = `tarea-item tareasCard ${classePorEsTareas(nuevoEstado)}`;
 
-      // 3. CORRECCIÓN CLAVE: Usa data-fecha en lugar del texto formateado
+      // 3. 
       const fechaCreacion = li
         .querySelector(".fecha-creacion")
         .getAttribute("data-fecha");

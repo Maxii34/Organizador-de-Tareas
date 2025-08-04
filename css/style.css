@@ -252,3 +252,11 @@ textarea.form-control {
 #inputDescripcion {
   resize: none;
 }
+
+/* Estilos para todos los botones de estado */
+.btn-estado {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px; /* Ancho mínimo para consistencia */
+}
