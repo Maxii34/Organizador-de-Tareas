@@ -20,7 +20,7 @@ function main() {
       eliminarTareasEnStorage();
     });
   }
-  
+
   function eliminarTareasEnStorage() {
     localStorage.removeItem("tareas"); // Borra las tareas guardadas
     tareas.splice(0, tareas.length); // Vacía el arreglo de tareas correctamente
@@ -53,6 +53,20 @@ function main() {
     }
   }
 
+  // Ahora esta función usa tus clases personalizadas
+  function classePorEsTareas(estado) {
+    switch (estado) {
+      case "Creada":
+        return "itemEstado-creado text-dark";
+      case "En proceso":
+        return "itemEstado-en-proceso text-dark";
+      case "Terminada":
+        return "itemEstado-terminada text-dark";
+      default:
+        return "itemEstado-default text-dark";
+    }
+  }
+
   // Cambia el estado actual de la tarea al siguiente
   function cambiarEstado(estadoActual) {
     const estados = ["Creada", "En proceso", "Terminada"];
@@ -67,8 +81,7 @@ function main() {
   // Crea visualmente un elemento de tarea y lo añade al DOM
   function crearElementoTarea(tarea) {
     const li = document.createElement("li");
-    li.className =
-      "tarea-item";
+    li.className = `tarea-item tareasCard ${classePorEsTareas(tarea.estado)}`;
 
     // Contenedor principal
     const divPrincipal = document.createElement("div");
@@ -80,12 +93,12 @@ function main() {
       "d-flex justify-content-between align-items-start mb-2";
 
     const divTexto = document.createElement("div");
-    divTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
+    divTexto.className = "fw-bold texto-tarea";
     divTexto.textContent = tarea.texto;
 
     const divDescripcion = document.createElement("div");
-    divDescripcion.className = "text-muted small";
-    divDescripcion.textContent = tarea.descripcion || "Sin descripción";
+    divDescripcion.className = "fw-bold  texto-tarea";
+    divDescripcion.textContent = tarea.descripcion;
     divTexto.appendChild(divDescripcion);
 
     const spanEstado = document.createElement("span");
@@ -124,7 +137,7 @@ function main() {
 
     // Botones: Estado, Editar, Ver, Borrar ------------
     const divBotones = document.createElement("div");
-    divBotones.className = "d-flex justify-content-end flex-wrap gap-2 ";
+    divBotones.className = "d-flex justify-content-end flex-wrap gap-1 ";
 
     const btnEstado = document.createElement("button");
     btnEstado.className = "btn btn-success btn-sm shadow";
@@ -192,7 +205,7 @@ function main() {
 
     // Ocultar mensaje vacío
     if (mensajeVacio) mensajeVacio.style.display = "none";
-    console.log(mensajeVacio)
+    console.log(mensajeVacio);
   });
 
   // Evento: Manejar clics en la lista de tareas
@@ -206,25 +219,34 @@ function main() {
       const estadoActual = badge.textContent;
       const nuevoEstado = cambiarEstado(estadoActual);
 
+      // 1. Actualiza el badge visualmente
       badge.textContent = nuevoEstado;
       badge.className = `badge ${classePorEstado(nuevoEstado)}`;
-      // Actualizar el estado en el arreglo de tareas
+
+      // 2. Actualiza el contenedor principal (li)
+      li.className = `tarea-item tareasCard ${classePorEsTareas(nuevoEstado)}`;
+
+      // 3. CORRECCIÓN CLAVE: Usa data-fecha en lugar del texto formateado
       const fechaCreacion = li
         .querySelector(".fecha-creacion")
-        .textContent.split(": ")[1];
+        .getAttribute("data-fecha");
       const indice = tareas.findIndex((t) => t.fechaCreacion === fechaCreacion);
+
       if (indice !== -1) {
+        // 4. Actualiza el estado y fecha de modificación
         tareas[indice].estado = nuevoEstado;
         tareas[indice].fechaModificacion = new Date().toISOString();
+
+        // 5. Guarda en localStorage
         guardarTareasEnStorage();
       }
 
-      // Mostrar fecha de modificación
+      // 6. Muestra fecha de modificación
       const divFechaMod = li.querySelector(".fecha-modificacion");
       divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
       divFechaMod.classList.remove("d-none");
 
-      // Ocultar botón si está terminada
+      // 7. Oculta botón si está terminada
       if (nuevoEstado === "Terminada") {
         e.target.style.display = "none";
       }
@@ -288,7 +310,7 @@ function main() {
 
         const fechaCreacion = li
           .querySelector(".fecha-creacion")
-          .textContent.split(": ")[1];
+          .textContent.split("data-fecha");
         const indice = tareas.findIndex(
           (t) => t.fechaCreacion === fechaCreacion
         );
@@ -317,12 +339,11 @@ function main() {
     if (e.target.classList.contains("btn-info")) {
       const divTexto = li.querySelector(".texto-tarea");
       const badge = li.querySelector(".badge");
-      const descripcion =
-        li.querySelector(".text-muted.small")?.textContent || "Sin descripción";
+      const descripcion = li.querySelector(".text-muted.small")?.textContent;
       //obcional: mostrar en un modal e eliminar alerta
       alert(`Tarea: ${divTexto.childNodes[0].nodeValue.trim()}
-Descripción: ${descripcion}
-Estado: ${badge.textContent}`);
+      Descripción: ${descripcion}
+      Estado: ${badge.textContent}`);
     }
 
     // Botón: Borrar
