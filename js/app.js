@@ -118,18 +118,14 @@ function main() {
     divFechaCreacion.textContent = `Creada: ${formatearFecha(
       tarea.fechaCreacion
     )}`;
+
     // fecha original en data-fecha
     divFechaCreacion.setAttribute("data-fecha", tarea.fechaCreacion);
 
     const divFechaMod = document.createElement("div");
     divFechaMod.className =
       "fecha-modificacion small text-muted text-nowrap d-none";
-    if (tarea.fechaModificacion) {
-      divFechaMod.textContent = `Modificada: ${formatearFecha(
-        tarea.fechaModificacion
-      )}`;
-      divFechaMod.classList.remove("d-none");
-    }
+    divFechaMod.classList.add("d-none"); // Siempre oculta inicialmente
 
     divInferior.appendChild(divFechaCreacion);
     divInferior.appendChild(divFechaMod);
@@ -192,7 +188,6 @@ function main() {
       descripcion,
       estado: "Creada",
       fechaCreacion: new Date().toISOString(),
-      fechaModificacion: new Date().toISOString(),
     };
 
     tareas.push(nuevaTarea);
@@ -261,15 +256,16 @@ function main() {
         ? divDescripcion.textContent
         : "";
 
+      //crea el input
       const inputTexto = document.createElement("input");
       inputTexto.type = "text";
       inputTexto.className = "form-control form-control-sm mb-1";
       inputTexto.placeholder = "Actualiza título...";
       inputTexto.value = textoActual;
 
-      // Establece límites 
-      inputTexto.minLength = 3; 
-      inputTexto.maxLength = 50; 
+      // Establece límites
+      inputTexto.minLength = 3;
+      inputTexto.maxLength = 50;
 
       // Validación en tiempo real
       inputTexto.addEventListener("input", function () {
@@ -277,16 +273,16 @@ function main() {
           this.value = this.value.slice(0, this.maxLength);
         }
       });
-
+      // crea el textarea
       const textareaDesc = document.createElement("textarea");
-      textareaDesc.className = "form-control form-control-sm mb-1";
+      textareaDesc.className = "form-control form-control-sm mb-1 small text-muted";
       textareaDesc.rows = 2;
       textareaDesc.placeholder = "Añade la Descripción...";
       textareaDesc.value = descripcionActual;
 
       // Establece límites
       textareaDesc.minLength = 5;
-      textareaDesc.maxLength = 100; 
+      textareaDesc.maxLength = 50;
 
       // Deshabilitar redimensión
       textareaDesc.style.resize = "none";
@@ -299,6 +295,7 @@ function main() {
         }
       });
 
+      //Crea los btn para el textarea e input (Aceptar/Cancelar).
       const btnGuardar = document.createElement("button");
       btnGuardar.className = "btn btn-success btn-sm me-1";
       btnGuardar.textContent = "Aceptar";
@@ -317,42 +314,50 @@ function main() {
 
       divTexto.parentNode.replaceChild(divEdicion, divTexto);
 
-      const guardar = () => {
-        const nuevoTexto = inputTexto.value.trim();
-        if (!nuevoTexto) {
-          alert("El texto no puede estar vacío.");
-          return;
-        }
-        const nuevaDesc = textareaDesc.value.trim();
+const guardar = () => {
+  // Obtener y limpiar los valores de los inputs
+  const nuevoTexto = inputTexto.value.trim();
+  
+  // Validar que el texto no esté vacío
+  if (!nuevoTexto) {
+    alert("El texto no puede estar vacío.");
+    return; // Detener la función si está vacío
+  }
+  
+  // Obtener y limpiar la descripción
+  const nuevaDesc = textareaDesc.value.trim();
 
-        const nuevoDivTexto = document.createElement("div");
-        nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea me-4";
-        nuevoDivTexto.textContent = nuevoTexto;
+  // Crear nuevo contenedor para el texto de la tarea
+  const nuevoDivTexto = document.createElement("div");
+  nuevoDivTexto.className = "fw-bold flex-grow-1 texto-tarea me-4"; // Estilos
+  nuevoDivTexto.textContent = nuevoTexto; // Asignar el nuevo texto
 
-        const nuevoDivDesc = document.createElement("div");
-        nuevoDivDesc.className = "text-muted small";
-        nuevoDivDesc.textContent = nuevaDesc || "Sin descripción";
-        nuevoDivTexto.appendChild(nuevoDivDesc);
+  // Crear contenedor para la descripción
+  const nuevoDivDesc = document.createElement("div");
+  nuevoDivDesc.className = "text-muted small"; // Texto pequeño y gris
+  nuevoDivDesc.textContent = nuevaDesc || "Sin descripción"; // Usar texto alternativo si está vacío
+  nuevoDivTexto.appendChild(nuevoDivDesc); // Agregar descripción al div de texto
 
-        divEdicion.parentNode.replaceChild(nuevoDivTexto, divEdicion);
+  // Reemplazar el formulario de edición con los nuevos elementos
+  divEdicion.parentNode.replaceChild(nuevoDivTexto, divEdicion);
 
-        const fechaCreacion = li
-          .querySelector(".fecha-creacion")
-          .textContent.split("data-fecha");
-        const indice = tareas.findIndex(
-          (t) => t.fechaCreacion === fechaCreacion
-        );
-        if (indice !== -1) {
-          tareas[indice].texto = nuevoTexto;
-          tareas[indice].descripcion = nuevaDesc;
-          tareas[indice].fechaModificacion = new Date().toISOString();
-          guardarTareasEnStorage();
-        }
+  // Buscar la tarea original para actualizarla
+  const fechaCreacion = li.querySelector(".fecha-creacion").getAttribute("data-fecha");
+  const indice = tareas.findIndex((t) => t.fechaCreacion === fechaCreacion);
+  
+  // Si se encontró la tarea, actualizarla
+  if (indice !== -1) {
+    tareas[indice].texto = nuevoTexto; // Actualizar texto
+    tareas[indice].descripcion = nuevaDesc; // Actualizar descripción
+    tareas[indice].fechaModificacion = new Date().toISOString(); // Actualizar fecha
+    guardarTareasEnStorage(); // Guardar en localStorage
+  }
 
-        const divFechaMod = li.querySelector(".fecha-modificacion");
-        divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
-        divFechaMod.classList.remove("d-none");
-      };
+  // Actualizar la fecha de modificación visualmente
+  const divFechaMod = li.querySelector(".fecha-modificacion");
+  divFechaMod.textContent = `Modificada: ${formatearFecha(new Date())}`;
+  divFechaMod.classList.remove("d-none"); // Mostrar el elemento
+};
 
       btnGuardar.addEventListener("click", guardar);
       btnCancelar.addEventListener("click", () => {
