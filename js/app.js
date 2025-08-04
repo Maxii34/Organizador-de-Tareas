@@ -209,7 +209,6 @@ function classePorEsTareas(estado) {
 
     // Ocultar mensaje vacío
     if (mensajeVacio) mensajeVacio.style.display = "none";
-    console.log(mensajeVacio);
   });
 
   // Evento: Manejar clics en la lista de tareas
